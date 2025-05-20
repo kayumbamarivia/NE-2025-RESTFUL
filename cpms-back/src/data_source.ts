@@ -4,7 +4,7 @@ import { User } from "./models/User.ts";
 import { HistorySubscriber } from "./utils/HistorySubscriber.ts";
 import { History } from "./models/History.ts";
 // import { Vehicle } from "./models/Vehicle.ts";
-// import { Slot } from "./models/Slot.ts";
+import { Park } from "./models/Park.ts";
 // import { Booking } from "./models/Booking.ts";
 // import { Notification } from "./models/Notification.ts";
 // import { Payment } from "./models/Payment.ts"
@@ -18,7 +18,7 @@ export const AppDataSource = new DataSource({
   database: "cpms",
   synchronize: true, 
   logging: [],
-  entities: [User, History],
+  entities: [User, History, Park],
   migrations: ["query"],
   subscribers: [HistorySubscriber],
 });

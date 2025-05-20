@@ -1,6 +1,5 @@
 
 export enum SlotStatus {
-  AVAILABLE,
-  OCCUPIED,
-  RESERVED 
+  AVAILABLE = "available",
+  OCCUPIED = "occupied",
 }

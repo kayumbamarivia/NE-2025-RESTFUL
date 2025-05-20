@@ -318,10 +318,10 @@ const swaggerSpec: OpenAPIObject = {
         },
       },
     },
-    '/rest/cpms/api/v1/slots': {
+    '/rest/cpms/api/v1/parks': {
       get: {
-        tags: ['Slots'],
-        summary: 'Get all slots',
+        tags: ['Parks'],
+        summary: 'Get all Parks',
         security: [
           {
             bearerAuth: [],
@@ -329,13 +329,13 @@ const swaggerSpec: OpenAPIObject = {
         ],
         responses: {
           '200': {
-            description: 'List of slots',
+            description: 'List of Parks',
             content: {
               'application/json': {
                 schema: {
                   type: 'array',
                   items: {
-                    $ref: '#/components/schemas/Slot',
+                    $ref: '#/components/schemas/Park',
                   },
                 },
               },
@@ -344,8 +344,8 @@ const swaggerSpec: OpenAPIObject = {
         },
       },
       post: {
-        tags: ['Slots'],
-        summary: 'Create a new slot',
+        tags: ['Parks'],
+        summary: 'Create a new Park',
         security: [
           {
             bearerAuth: [],
@@ -356,18 +356,18 @@ const swaggerSpec: OpenAPIObject = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/SlotInput',
+                $ref: '#/components/schemas/ParkInput',
               },
             },
           },
         },
         responses: {
           '201': {
-            description: 'Slot created successfully',
+            description: 'Park created successfully',
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/Slot',
+                  $ref: '#/components/schemas/Park',
                 },
               },
             },
@@ -375,10 +375,10 @@ const swaggerSpec: OpenAPIObject = {
         },
       },
     },
-    '/rest/cpms/api/v1/slots/{id}': {
+    '/rest/cpms/api/v1/parks/{id}': {
       get: {
-        tags: ['Slots'],
-        summary: 'Get a slot by ID',
+        tags: ['Parks'],
+        summary: 'Get a Park by ID',
         security: [
           {
             bearerAuth: [],
@@ -396,23 +396,23 @@ const swaggerSpec: OpenAPIObject = {
         ],
         responses: {
           '200': {
-            description: 'Slot details',
+            description: 'Park details',
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/Slot',
+                  $ref: '#/components/schemas/Park',
                 },
               },
             },
           },
           '404': {
-            description: 'Slot not found',
+            description: 'Park not found',
           },
         },
       },
       put: {
-        tags: ['Slots'],
-        summary: 'Update a slot',
+        tags: ['Parks'],
+        summary: 'Update a Park',
         security: [
           {
             bearerAuth: [],
@@ -433,30 +433,30 @@ const swaggerSpec: OpenAPIObject = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/SlotInput',
+                $ref: '#/components/schemas/ParkInput',
               },
             },
           },
         },
         responses: {
           '200': {
-            description: 'Slot updated successfully',
+            description: 'Park updated successfully',
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/Slot',
+                  $ref: '#/components/schemas/Park',
                 },
               },
             },
           },
           '404': {
-            description: 'Slot not found',
+            description: 'Park not found',
           },
         },
       },
       delete: {
-        tags: ['Slots'],
-        summary: 'Delete a slot',
+        tags: ['Parks'],
+        summary: 'Delete a Park',
         security: [
           {
             bearerAuth: [],
@@ -474,10 +474,10 @@ const swaggerSpec: OpenAPIObject = {
         ],
         responses: {
           '200': {
-            description: 'Slot deleted successfully',
+            description: 'Park deleted successfully',
           },
           '404': {
-            description: 'Slot not found',
+            description: 'Park not found',
           },
         },
       },
@@ -1360,12 +1360,16 @@ const swaggerSpec: OpenAPIObject = {
     },
   },
 
-  Slot: {
+  Park: {
     type: 'object',
     properties: {
       id: {
         type: 'number',
         example: 1,
+      },
+      code: {
+        type: 'string',
+        example: 'ABC123',
       },
       parkingName: {
         type: 'string',
@@ -1401,10 +1405,14 @@ const swaggerSpec: OpenAPIObject = {
       },
     },
   },
-  SlotInput: {
+  ParkInput: {
     type: 'object',
-    required: ['parkingName', 'location', 'amount'],
+    required: ['parkingName', 'numberOfAvailableSpaces', 'location', 'chargingFeePerHr'],
     properties: {
+      code: {
+        type: 'string',
+        example: 'ABC123',
+      },
       parkingName: {
         type: 'string',
         example: 'Downtown Parking',
@@ -1424,7 +1432,7 @@ const swaggerSpec: OpenAPIObject = {
       },
       status: {
         type: 'string',
-        enum: ['AVAILABLE', 'OCCUPIED', 'RESERVED', 'MAINTENANCE'],
+        enum: ['AVAILABLE', 'OCCUPIED'],
         example: 'AVAILABLE',
       },
     },
@@ -1442,8 +1450,8 @@ const swaggerSpec: OpenAPIObject = {
       vehicle: {
         $ref: '#/components/schemas/Vehicle',
       },
-      slot: {
-        $ref: '#/components/schemas/Slot',
+      Park: {
+        $ref: '#/components/schemas/Park',
       },
       startTime: {
         type: 'string',
@@ -1479,7 +1487,7 @@ const swaggerSpec: OpenAPIObject = {
   },
   BookingInput: {
     type: 'object',
-    required: ['userId', 'vehicleId', 'slotId', 'startTime', 'endTime'],
+    required: ['userId', 'vehicleId', 'ParkId', 'startTime', 'endTime'],
     properties: {
       userId: {
         type: 'number',
@@ -1489,7 +1497,7 @@ const swaggerSpec: OpenAPIObject = {
         type: 'number',
         example: 1,
       },
-      slotId: {
+      ParkId: {
         type: 'number',
         example: 1,
       },
@@ -1576,7 +1584,7 @@ const swaggerSpec: OpenAPIObject = {
       },
       type: { 
         type: 'string', 
-        enum: ['BOOKING_CONFIRMED', 'BOOKING_CANCELLED', 'SLOT_AVAILABLE', 'PAYMENT_DUE', 'REMINDER'],
+        enum: ['BOOKING_CONFIRMED', 'BOOKING_CANCELLED', 'Park_AVAILABLE', 'PAYMENT_DUE', 'REMINDER'],
         example: 'BOOKING_CONFIRMED',
       },
       channel: { 
@@ -1595,7 +1603,7 @@ const swaggerSpec: OpenAPIObject = {
       },
       message: { 
         type: 'string',
-        example: 'Your parking slot has been successfully booked.',
+        example: 'Your parking Park has been successfully booked.',
       },
       referenceId: { 
         type: 'number',
@@ -1623,7 +1631,7 @@ const swaggerSpec: OpenAPIObject = {
       },
       type: { 
         type: 'string', 
-        enum: ['BOOKING_CONFIRMED', 'BOOKING_CANCELLED', 'SLOT_AVAILABLE', 'PAYMENT_DUE', 'REMINDER'],
+        enum: ['BOOKING_CONFIRMED', 'BOOKING_CANCELLED', 'Park_AVAILABLE', 'PAYMENT_DUE', 'REMINDER'],
         example: 'BOOKING_CONFIRMED',
       },
       channel: { 
@@ -1637,7 +1645,7 @@ const swaggerSpec: OpenAPIObject = {
       },
       message: { 
         type: 'string',
-        example: 'Your parking slot has been successfully booked.',
+        example: 'Your parking Park has been successfully booked.',
       },
       referenceId: { 
         type: 'number',

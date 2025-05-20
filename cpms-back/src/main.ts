@@ -10,7 +10,7 @@ import helmet from "helmet";
 import { AppDataSource } from "./data_source.ts";
 import { userRoutes } from "./routes/userRoute.ts";
 import { emailRoutes } from "./routes/emailRoute.ts";
-import { parkRoutes } from './routes/ParkRoute.ts';
+import { parkRoutes } from './routes/parkRoute.ts';
 import { vehicleRoutes } from './routes/vehicleRoute.ts';
 // import { bookingRoutes } from './routes/bookingRoute.ts';
 // import { notificationRoutes } from './routes/notificationRoute.ts';

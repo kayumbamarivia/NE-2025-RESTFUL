@@ -1,87 +1,67 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from '../redux/user/userSlice';
+import { useNavigate, Link } from 'react-router-dom'; // <-- import Link
+import { authApi } from '../api/api.ts';
 
-export default function SignIn() {
-  const [formData, setFormData] = useState({});
-  const { loading, error } = useSelector((state) => state.user);
+const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [credentials, setCredentials] = useState({
+    email: '',
+    password: '',
+  });
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(signInStart());
-      const res = await fetch('https://kayumba-jmv-java-spring-boot-backend-apis.onrender.com/api/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        dispatch(signInFailure(data.message));
-        return;
-      }
-
-      const data = await res.json();
-      const { token, ...user } = data;
-      sessionStorage.setItem('token', token); 
-      console.log(user.user);
-    dispatch(signInSuccess(user.user));
-      navigate('/home');
-    } catch (error) {
-      dispatch(signInFailure(error.message));
+      const response = await authApi.login(credentials);
+      localStorage.setItem('token', response.token);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message || 'Login failed');
     }
   };
 
   return (
-    <div className='p-3 max-w-lg mx-auto'>
-      <h1 className='text-3xl text-center font-semibold my-7'>Sign In</h1>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <input
-          type='email'
-          placeholder='email'
-          className='border p-3 rounded-lg'
-          id='username'
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={credentials.email}
           onChange={handleChange}
+          className="w-full p-2 mb-4 border rounded"
+          required
         />
         <input
-          type='password'
-          placeholder='password'
-          className='border p-3 rounded-lg'
-          id='password'
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={credentials.password}
           onChange={handleChange}
+          className="w-full p-2 mb-6 border rounded"
+          required
         />
-
-        <button
-          disabled={loading}
-          className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
-        >
-          {loading ? 'Loading...' : 'Sign In'}
+        <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">
+          Login
         </button>
+
+        {/* Signup prompt */}
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Don&apos;t have an account?{' '}
+          <Link to="/signup" className="text-blue-500 hover:underline">
+            Sign up
+          </Link>
+        </p>
       </form>
-      <div className='flex gap-2 mt-5'>
-        <p>Dont have an account?</p>
-        <Link to={'/sign-up'}>
-          <span className='text-blue-700'>Sign up</span>
-        </Link>
-      </div>
-      {error && <p className='text-red-500 mt-5'>{error}</p>}
     </div>
   );
-}
+};
+
+export default Login;

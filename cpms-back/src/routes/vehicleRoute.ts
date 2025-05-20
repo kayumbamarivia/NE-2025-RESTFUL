@@ -11,4 +11,14 @@ router.post('/vehicles', JwtAuthenticater, vehicleController.createVehicle.bind(
 router.put('/vehicles/:id', JwtAuthenticater, vehicleController.updateVehicle.bind(vehicleController));
 router.delete('/vehicles/:id', JwtAuthenticater, vehicleController.deleteVehicle.bind(vehicleController));
 
+// ✅ NEW: Route to handle vehicle entry and generate ticket
+router.post('/vehicles/entry', JwtAuthenticater, vehicleController.vehicleEntry.bind(vehicleController));
+
+// ✅ NEW: Route to handle vehicle exit and generate bill
+router.post('/vehicles/exit/:id', JwtAuthenticater, vehicleController.vehicleExit.bind(vehicleController));
+
+router.get('/vehicles/exits', vehicleController.getExitedVehiclesBetweenDates.bind(vehicleController));
+router.get('/vehicles/entries', vehicleController.getEnteredVehiclesBetweenDates.bind(vehicleController));
+
+
 export const vehicleRoutes = router;

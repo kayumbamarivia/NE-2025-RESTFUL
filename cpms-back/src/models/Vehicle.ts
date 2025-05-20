@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from "typeorm";
 import { User } from "./User.ts";
+import { Park } from "./Park.ts";
 // import { Booking } from "./Booking.ts";
 
 @Entity({ name: "vehicles" })
@@ -10,8 +11,9 @@ export class Vehicle {
   @Column({ name: "plate_number", type: "varchar", length: 255 })
   plateNumber: string;
 
-  @Column({ name: "parking_code", type: "varchar", length: 255 })
-  parkingCode: string;
+ @ManyToOne(() => Park)
+@JoinColumn({ name: "park_id" })
+park: Park;
 
   @ManyToOne(() => User, user => user.vehicles)
   @JoinColumn({ name: "user_id" })
@@ -23,7 +25,7 @@ export class Vehicle {
   @Column({ name: "exit_time", type: "datetime", nullable: true })
   exitTime: Date;
 
-  @Column({ name: "charged_amount", type: "float", nullable: true })
+  @Column({ name: "charged_amount", type: "float", nullable: true , default: 0})
   chargedAmount: number;
 
 //   @OneToMany(() => Booking, booking => booking.vehicle)

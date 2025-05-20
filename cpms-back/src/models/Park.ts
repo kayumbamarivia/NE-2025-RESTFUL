@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
 import { SlotStatus } from "../enums/SlotStatus.ts"
+import { Vehicle } from "./Vehicle.ts"
 // import { Booking } from "./Booking.ts"
 
 @Entity({ name: "parks" })
@@ -24,6 +25,10 @@ export class Park {
 
   @Column({ name: "status", type: "enum", enum: SlotStatus, default: SlotStatus.AVAILABLE })
   status: SlotStatus;
+
+  @OneToMany(() => Vehicle, vehicle => vehicle.park)
+vehicles: Vehicle[];
+
 
 //   @OneToMany(() => Booking, booking => booking.slot) 
 //   bookings: Booking[];

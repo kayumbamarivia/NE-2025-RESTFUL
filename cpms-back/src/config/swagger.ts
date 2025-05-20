@@ -7,7 +7,7 @@ const swaggerSpec: OpenAPIObject = {
     description: 'An API Documentation',
   },
   paths: {
-    '/rest/ccpms/api/v1/register': {
+    '/rest/cpms/api/v1/register': {
       post: {
         tags: ['Users'],
         summary: 'Create a new user',
@@ -87,7 +87,7 @@ const swaggerSpec: OpenAPIObject = {
         },
       },
     },
-    '/rest/ccpms/api/v1/login': {
+    '/rest/cpms/api/v1/login': {
       post: {
         tags: ['Users'],
         summary: 'Login to get a JWT token',
@@ -143,7 +143,7 @@ const swaggerSpec: OpenAPIObject = {
         },
       },
     },
-    '/rest/ccpms/api/v1/users': {
+    '/rest/cpms/api/v1/users': {
       get: {
         tags: ['Users'],
         summary: 'Get all users',
@@ -646,601 +646,189 @@ const swaggerSpec: OpenAPIObject = {
         },
       },
     },
-    '/rest/cpms/api/v1/bookings': {
-      get: {
-        tags: ['Bookings'],
-        summary: 'Get all bookings',
-        security: [
-          {
-            bearerAuth: [],
+'/rest/cpms/api/v1/vehicles/entry': {
+  post: {
+    tags: ['Vehicles'],
+    summary: 'Register vehicle entry and generate ticket',
+    security: [
+      {
+        bearerAuth: []
+      }
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/components/schemas/VehicleEntryInput'
+          }
+        }
+      }
+    },
+    responses: {
+      '201': {
+        description: 'Vehicle entry recorded and ticket generated',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/EntryTicket'
+            }
+          }
+        }
+      },
+      '400': {
+        description: 'Parking full or invalid input'
+      }
+    }
+  }
+},
+'/rest/cpms/api/v1/vehicles/exit/{id}': {
+  post: {
+    tags: ['Vehicles'],
+    summary: 'Register vehicle exit and generate bill',
+    security: [
+      {
+        bearerAuth: []
+      }
+    ],
+    parameters: [
+      {
+        name: 'id',
+        in: 'path',
+        required: true,
+        schema: {
+          type: 'integer'
+        }
+      }
+    ],
+    responses: {
+      '200': {
+        description: 'Vehicle exited and bill generated',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/ExitBill'
+            }
+          }
+        }
+      },
+      '404': {
+        description: 'Vehicle not found'
+      }
+    }
+  }
+},
+  "/rest/cpms/api/v1/vehicles/entries": {
+    "get": {
+      "tags": ['Vehicles'],
+      "summary": "Get entered vehicles between two dates",
+      "parameters": [
+        {
+          "in": "query",
+          "name": "start",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date-time"
           },
-        ],
-        responses: {
-          '200': {
-            description: 'List of bookings',
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'array',
-                  items: {
-                    $ref: '#/components/schemas/Booking',
+          "description": "Start date/time (ISO 8601 format)",
+          "example": "2025-05-01T00:00:00Z"
+        },
+        {
+          "in": "query",
+          "name": "end",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": "End date/time (ISO 8601 format)",
+          "example": "2025-05-20T23:59:59Z"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of entered vehicles between the two dates",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "vehicles": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Vehicle"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Missing or invalid date parameters"
+        }
+      }
+    }
+  },
+  "/vehicles/exits": {
+    "get": {
+      "tags": ['Vehicles'],
+      "summary": "Get exited vehicles between two dates with total charged amount",
+      "parameters": [
+        {
+          "in": "query",
+          "name": "start",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": "Start date/time (ISO 8601 format)",
+          "example": "2025-05-01T00:00:00Z"
+        },
+        {
+          "in": "query",
+          "name": "end",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": "End date/time (ISO 8601 format)",
+          "example": "2025-05-20T23:59:59Z"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of exited vehicles and total amount charged between the two dates",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "totalCharged": {
+                    "type": "number",
+                    "format": "float",
+                    "example": 145.75
                   },
-                },
-              },
-            },
-          },
+                  "vehicles": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Vehicle"
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
-      },
-      post: {
-        tags: ['Bookings'],
-        summary: 'Create a new booking',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/BookingInput',
-              },
-            },
-          },
-        },
-        responses: {
-          '201': {
-            description: 'Booking created successfully',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Booking',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/rest/cpms/api/v1/bookings/{id}': {
-      get: {
-        tags: ['Bookings'],
-        summary: 'Get a booking by ID',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: {
-              type: 'integer',
-            },
-          },
-        ],
-        responses: {
-          '200': {
-            description: 'Booking details',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Booking',
-                },
-              },
-            },
-          },
-          '404': {
-            description: 'Booking not found',
-          },
-        },
-      },
-      put: {
-        tags: ['Bookings'],
-        summary: 'Update a booking',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: {
-              type: 'integer',
-            },
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/BookingInput',
-              },
-            },
-          },
-        },
-        responses: {
-          '200': {
-            description: 'Booking updated successfully',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Booking',
-                },
-              },
-            },
-          },
-          '404': {
-            description: 'Booking not found',
-          },
-        },
-      },
-      delete: {
-        tags: ['Bookings'],
-        summary: 'Delete a booking',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: {
-              type: 'integer',
-            },
-          },
-        ],
-        responses: {
-          '200': {
-            description: 'Booking deleted successfully',
-          },
-          '404': {
-            description: 'Booking not found',
-          },
-        },
-      },
-    },
-    '/rest/cpms/api/v1/notifications': {
-      get: {
-        tags: ['Notifications'],
-        summary: 'Get all notifications',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        responses: {
-          '200': {
-            description: 'List of notifications',
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'array',
-                  items: {
-                    $ref: '#/components/schemas/Notification',
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      post: {
-        tags: ['Notifications'],
-        summary: 'Create a new notification',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/NotificationInput',
-              },
-            },
-          },
-        },
-        responses: {
-          '201': {
-            description: 'Notification created successfully',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Notification',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/rest/cpms/api/v1/notifications/{id}': {
-      get: {
-        tags: ['Notifications'],
-        summary: 'Get a notification by ID',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: {
-              type: 'integer',
-            },
-          },
-        ],
-        responses: {
-          '200': {
-            description: 'Notification details',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Notification',
-                },
-              },
-            },
-          },
-          '404': {
-            description: 'Notification not found',
-          },
-        },
-      },
-      put: {
-        tags: ['Notifications'],
-        summary: 'Update a notification',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: {
-              type: 'integer',
-            },
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/NotificationInput',
-              },
-            },
-          },
-        },
-        responses: {
-          '200': {
-            description: 'Notification updated successfully',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Notification',
-                },
-              },
-            },
-          },
-          '404': {
-            description: 'Notification not found',
-          },
-        },
-      },
-      delete: {
-        tags: ['Notifications'],
-        summary: 'Delete a notification',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: {
-              type: 'integer',
-            },
-          },
-        ],
-        responses: {
-          '200': {
-            description: 'Notification deleted successfully',
-          },
-          '404': {
-            description: 'Notification not found',
-          },
-        },
-      },
-    },
-    '/rest/cpms/api/v1/histories': {
-      get: {
-        tags: ['Histories'],
-        summary: 'Get all histories',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        responses: {
-          '200': {
-            description: 'List of histories',
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'array',
-                  items: {
-                    $ref: '#/components/schemas/History',
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      post: {
-        tags: ['Histories'],
-        summary: 'Create a new history',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/HistoryInput',
-              },
-            },
-          },
-        },
-        responses: {
-          '201': {
-            description: 'History created successfully',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/History',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/rest/cpms/api/v1/histories/{id}': {
-      get: {
-        tags: ['Histories'],
-        summary: 'Get a history by ID',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: {
-              type: 'integer',
-            },
-          },
-        ],
-        responses: {
-          '200': {
-            description: 'History details',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/History',
-                },
-              },
-            },
-          },
-          '404': {
-            description: 'History not found',
-          },
-        },
-      },
-      put: {
-        tags: ['Histories'],
-        summary: 'Update a history',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: {
-              type: 'integer',
-            },
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/HistoryInput',
-              },
-            },
-          },
-        },
-        responses: {
-          '200': {
-            description: 'History updated successfully',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/History',
-                },
-              },
-            },
-          },
-          '404': {
-            description: 'History not found',
-          },
-        },
-      },
-      delete: {
-        tags: ['Histories'],
-        summary: 'Delete a history',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: 'id',
-            in: 'path',
-            required: true,
-            schema: {
-              type: 'integer',
-            },
-          },
-        ],
-        responses: {
-          '200': {
-            description: 'History deleted successfully',
-          },
-          '404': {
-            description: 'History not found',
-          },
-        },
-      },
-    },
-    '/rest/cpms/api/v1/payments': {
-      post: {
-        tags: ['Payments'],
-        summary: 'Create a new payment',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/PaymentInput',
-              },
-            },
-          },
-        },
-        responses: {
-          '201': {
-            description: 'Payment created successfully',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Payment',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/rest/cpms/api/v1/payments/complete': {
-      post: {
-        tags: ['Payments'],
-        summary: 'Complete a payment',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  paymentId: { type: 'integer' },
-                  transactionId: { type: 'string' },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          '200': {
-            description: 'Payment completed successfully',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Payment',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/rest/cpms/api/v1/payments/receipt/:paymentId': {
-      get: {
-        tags: ['Payments'],
-        summary: 'Get a payment receipt',
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        parameters: [
-          {
-            name: 'paymentId',
-            in: 'path',
-            required: true,
-            schema: {
-              type: 'integer',
-            },
-          },
-        ],
-        responses: {
-          '200': {
-            description: 'Payment receipt',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Payment',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+        "400": {
+          "description": "Missing or invalid date parameters"
+        }
+      }
+    }
+  }
   },
   components: {
     securitySchemes: {
@@ -1474,277 +1062,51 @@ const swaggerSpec: OpenAPIObject = {
       },
     },
   },
-  Booking: {
-    type: 'object',
-    properties: {
-      id: {
-        type: 'number',
-        example: 1,
-      },
-      user: {
-        $ref: '#/components/schemas/User',
-      },
-      vehicle: {
-        $ref: '#/components/schemas/Vehicle',
-      },
-      Park: {
-        $ref: '#/components/schemas/Park',
-      },
-      startTime: {
-        type: 'string',
-        format: 'date-time',
-        example: '2023-01-01T10:00:00Z',
-      },
-      endTime: {
-        type: 'string',
-        format: 'date-time',
-        example: '2023-01-01T12:00:00Z',
-      },
-      status: {
-        type: 'string',
-        enum: ['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED'],
-        example: 'PENDING',
-      },
-      totalCost: {
-        type: 'number',
-        format: 'float',
-        example: 30.00,
-      },
-      createdAt: {
-        type: 'string',
-        format: 'date-time',
-        example: '2023-01-01T00:00:00Z',
-      },
-      updatedAt: {
-        type: 'string',
-        format: 'date-time',
-        example: '2023-01-01T00:00:00Z',
-      },
+"VehicleEntryInput": {
+  "type": "object",
+  "properties": {
+    "plateNumber": {
+      "type": "string"
     },
+    "parkingCode": {
+      "type": "string"
+    }
   },
-  BookingInput: {
-    type: 'object',
-    required: ['userId', 'vehicleId', 'ParkId', 'startTime', 'endTime'],
-    properties: {
-      userId: {
-        type: 'number',
-        example: 1,
-      },
-      vehicleId: {
-        type: 'number',
-        example: 1,
-      },
-      ParkId: {
-        type: 'number',
-        example: 1,
-      },
-      startTime: {
-        type: 'string',
-        format: 'date-time',
-        example: '2023-01-01T10:00:00Z',
-      },
-      endTime: {
-        type: 'string',
-        format: 'date-time',
-        example: '2023-01-01T12:00:00Z',
-      },
+  "required": ["plateNumber", "parkingCode"]
+},
+"EntryTicket": {
+  "type": "object",
+  "properties": {
+    "ticketId": {
+      "type": "string"
     },
-  },
-  Payment: {
-    type: 'object',
-    properties: {
-      id: { 
-        type: 'number',
-        example: 1,
-      },
-      booking: { 
-        $ref: '#/components/schemas/Booking' 
-      },
-      amount: { 
-        type: 'number', 
-        format: 'float',
-        example: 30.00,
-      },
-      status: { 
-        type: 'string', 
-        enum: ['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED'],
-        example: 'COMPLETED',
-      },
-      receiptNumber: { 
-        type: 'string',
-        example: 'RCPT-12345',
-      },
-      paymentMethod: { 
-        type: 'string',
-        example: 'CREDIT_CARD',
-      },
-      transactionId: { 
-        type: 'string',
-        example: 'TXN-67890',
-      },
-      createdAt: { 
-        type: 'string', 
-        format: 'date-time',
-        example: '2023-01-01T00:00:00Z',
-      },
-      updatedAt: { 
-        type: 'string', 
-        format: 'date-time',
-        example: '2023-01-01T00:00:00Z',
-      },
+    "entryTime": {
+      "type": "string",
+      "format": "date-time"
     },
-  },
-  PaymentInput: {
-    type: 'object',
-    required: ['bookingId', 'paymentMethod'],
-    properties: {
-      bookingId: { 
-        type: 'number',
-        example: 1,
-      },
-      paymentMethod: { 
-        type: 'string',
-        example: 'CREDIT_CARD',
-      },
+    "vehicle": {
+      "$ref": "#/components/schemas/Vehicle"
+    }
+  }
+},
+"ExitBill": {
+  "type": "object",
+  "properties": {
+    "ticketId": {
+      "type": "string"
     },
-  },
-  
-  Notification: {
-    type: 'object',
-    properties: {
-      id: { 
-        type: 'number',
-        example: 1,
-      },
-      user: { 
-        $ref: '#/components/schemas/User' 
-      },
-      type: { 
-        type: 'string', 
-        enum: ['BOOKING_CONFIRMED', 'BOOKING_CANCELLED', 'Park_AVAILABLE', 'PAYMENT_DUE', 'REMINDER'],
-        example: 'BOOKING_CONFIRMED',
-      },
-      channel: { 
-        type: 'string', 
-        enum: ['EMAIL', 'PUSH', 'SMS', 'IN_APP'],
-        example: 'EMAIL',
-      },
-      status: { 
-        type: 'string', 
-        enum: ['PENDING', 'SENT', 'DELIVERED', 'READ', 'FAILED'],
-        example: 'SENT',
-      },
-      subject: { 
-        type: 'string',
-        example: 'Your booking is confirmed',
-      },
-      message: { 
-        type: 'string',
-        example: 'Your parking Park has been successfully booked.',
-      },
-      referenceId: { 
-        type: 'number',
-        example: 123,
-      },
-      createdAt: { 
-        type: 'string', 
-        format: 'date-time',
-        example: '2023-01-01T00:00:00Z',
-      },
-      updatedAt: { 
-        type: 'string', 
-        format: 'date-time',
-        example: '2023-01-01T00:00:00Z',
-      },
+    "exitTime": {
+      "type": "string",
+      "format": "date-time"
     },
-  },
-  NotificationInput: {
-    type: 'object',
-    required: ['userId', 'type', 'channel', 'subject', 'message'],
-    properties: {
-      userId: { 
-        type: 'number',
-        example: 1,
-      },
-      type: { 
-        type: 'string', 
-        enum: ['BOOKING_CONFIRMED', 'BOOKING_CANCELLED', 'Park_AVAILABLE', 'PAYMENT_DUE', 'REMINDER'],
-        example: 'BOOKING_CONFIRMED',
-      },
-      channel: { 
-        type: 'string', 
-        enum: ['EMAIL', 'PUSH', 'SMS', 'IN_APP'],
-        example: 'EMAIL',
-      },
-      subject: { 
-        type: 'string',
-        example: 'Your booking is confirmed',
-      },
-      message: { 
-        type: 'string',
-        example: 'Your parking Park has been successfully booked.',
-      },
-      referenceId: { 
-        type: 'number',
-        example: 123,
-      },
+    "durationMinutes": {
+      "type": "number"
     },
-  },
-  
-  History: {
-    type: 'object',
-    properties: {
-      id: { 
-        type: 'number',
-        example: 1,
-      },
-      entityType: { 
-        type: 'string',
-        example: 'Booking',
-      },
-      entityId: { 
-        type: 'string',
-        example: '42',
-      },
-      action: { 
-        type: 'string', 
-        enum: ['CREATE', 'UPDATE', 'DELETE'],
-        example: 'CREATE',
-      },
-      actorEmail: { 
-        type: 'string',
-        example: 'admin@example.com',
-      },
-      createdAt: { 
-        type: 'string', 
-        format: 'date-time',
-        example: '2023-01-01T00:00:00Z',
-      },
-    },
-  },
-  HistoryInput: {
-    type: 'object',
-    required: ['entityType', 'entityId', 'action', 'actorEmail'],
-    properties: {
-      entityType: { 
-        type: 'string',
-        example: 'Booking',
-      },
-      entityId: { 
-        type: 'string',
-        example: '42',
-      },
-      action: { 
-        type: 'string', 
-        enum: ['CREATE', 'UPDATE', 'DELETE'],
-        example: 'CREATE',
-      },
-      actorEmail: { 
-        type: 'string',
-        example: 'admin@example.com',
-      },
-    },
-  },
+    "totalAmount": {
+      "type": "number"
+    }
+  }
+}
     },
   },
 };

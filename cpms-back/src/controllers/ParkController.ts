@@ -36,8 +36,7 @@ export class ParkController {
   async createPark(req: Request, res: Response): Promise<void> {
     try {
       const ParkData = req.body;
-      const savee = {...ParkData, status : 'available'};
-      const newPark = await this.ParkService.create(savee);
+      const newPark = await this.ParkService.create(ParkData);
       res.status(201).json(newPark);
     } catch (error) {
       console.error('Error creating Park:', error);

@@ -1,25 +1,37 @@
-// import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn , OneToMany } from "typeorm";
-// import { User } from "./User.ts"; 
-// import { Booking } from "./Booking.ts"; 
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import { User } from "./User.ts";
+// import { Booking } from "./Booking.ts";
 
-// @Entity({ name: "vehicles" })
-// export class Vehicle {
-//   @PrimaryGeneratedColumn()
-//   id: number;
+@Entity({ name: "vehicles" })
+export class Vehicle {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-//   @Column({ name: "name", type: "varchar", length: 255 })
-//   name: string;
+  @Column({ name: "plate_number", type: "varchar", length: 255 })
+  plateNumber: string;
 
-//   @ManyToOne(() => User, user => user.vehicles)
-//   @JoinColumn({ name: "user_id" })
-//   user: User;
+  @Column({ name: "parking_code", type: "varchar", length: 255 })
+  parkingCode: string;
+
+  @ManyToOne(() => User, user => user.vehicles)
+  @JoinColumn({ name: "user_id" })
+  user: User;
+
+  @Column({ name: "entry_time", type: "datetime", nullable: true })
+  entryTime: Date;
+
+  @Column({ name: "exit_time", type: "datetime", nullable: true })
+  exitTime: Date;
+
+  @Column({ name: "charged_amount", type: "float", nullable: true })
+  chargedAmount: number;
 
 //   @OneToMany(() => Booking, booking => booking.vehicle)
 //   bookings: Booking[];
 
-//   @CreateDateColumn({ type: "datetime" })
-//   createdAt: Date;
+  @CreateDateColumn({ name: "created_at", type: "datetime" })
+  createdAt: Date;
 
-//   @UpdateDateColumn({ type: "datetime" })
-//   updatedAt: Date;
-// }
+  @UpdateDateColumn({ name: "updated_at", type: "datetime" })
+  updatedAt: Date;
+}

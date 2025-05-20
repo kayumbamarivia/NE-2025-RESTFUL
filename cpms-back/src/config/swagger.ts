@@ -1326,12 +1326,31 @@ const swaggerSpec: OpenAPIObject = {
         type: 'number',
         example: 1,
       },
-      name: {
+      plateNumber: {
         type: 'string',
-        example: 'Toyota Camry',
+        example: 'ABC123',
+      },
+      parkingCode: {
+        type: 'string',
+        example: 'randomCode123',
       },
       user: {
         $ref: '#/components/schemas/User',
+      },
+      entryTime: {
+        type: 'string',
+        format: 'date-time',
+        example: '2023-01-01T00:00:00Z',
+      },
+      exitTime: {
+        type: 'string',
+        format: 'date-time',
+        example: '2023-01-01T00:00:00Z',
+      },
+      chargedAmount: {
+        type: 'number',
+        format: 'float',
+        example: 1000.50,
       },
       createdAt: {
         type: 'string',
@@ -1345,21 +1364,39 @@ const swaggerSpec: OpenAPIObject = {
       },
     },
   },
-  VehicleInput: {
-    type: 'object',
-    required: ['name', 'userId'],
-    properties: {
-      name: {
-        type: 'string',
-        example: 'Toyota Camry',
-      },
-      userId: {
-        type: 'number',
-        example: 1,
-      },
+  "VehicleInput": {
+  "type": "object",
+  "required": ["plateNumber", "parkingCode", "userId"],
+  "properties": {
+    "plateNumber": {
+      "type": "string",
+      "example": "ABC123"
     },
-  },
-
+    "parkingCode": {
+      "type": "string",
+      "example": "randomCode123"
+    },
+    "userId": {
+      "type": "number",
+      "example": 1
+    },
+    "entryTime": {
+      "type": "string",
+      "format": "date-time",
+      "example": "2023-01-01T00:00:00Z"
+    },
+    "exitTime": {
+      "type": "string",
+      "format": "date-time",
+      "example": "2023-01-01T00:00:00Z"
+    },
+    "chargedAmount": {
+      "type": "number",
+      "format": "float",
+      "example": 1000.50
+    }
+  }
+},
   Park: {
     type: 'object',
     properties: {

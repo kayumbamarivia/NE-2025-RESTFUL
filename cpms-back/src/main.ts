@@ -11,7 +11,7 @@ import { AppDataSource } from "./data_source.ts";
 import { userRoutes } from "./routes/userRoute.ts";
 import { emailRoutes } from "./routes/emailRoute.ts";
 import { parkRoutes } from './routes/ParkRoute.ts';
-// import { vehicleRoutes } from './routes/vehicleRoute.ts';
+import { vehicleRoutes } from './routes/vehicleRoute.ts';
 // import { bookingRoutes } from './routes/bookingRoute.ts';
 // import { notificationRoutes } from './routes/notificationRoute.ts';
 // import { historyRoutes } from './routes/historyRoute.ts';
@@ -35,7 +35,7 @@ AppDataSource.initialize()
 app.use("/rest/cpms/api/v1", userRoutes);
 app.use("/rest/cpms/api/v1", emailRoutes);
 app.use('/rest/cpms/api/v1', parkRoutes);
-// app.use('/rest/pms/api/v1', vehicleRoutes);
+app.use('/rest/cpms/api/v1', vehicleRoutes);
 // app.use('/rest/pms/api/v1', bookingRoutes);
 // app.use('/rest/pms/api/v1', notificationRoutes);
 // app.use('/rest/pms/api/v1', historyRoutes);

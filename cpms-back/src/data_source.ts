@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 import { User } from "./models/User.ts";
 import { HistorySubscriber } from "./utils/HistorySubscriber.ts";
 import { History } from "./models/History.ts";
-// import { Vehicle } from "./models/Vehicle.ts";
+import { Vehicle } from "./models/Vehicle.ts";
 import { Park } from "./models/Park.ts";
 // import { Booking } from "./models/Booking.ts";
 // import { Notification } from "./models/Notification.ts";
@@ -18,7 +18,7 @@ export const AppDataSource = new DataSource({
   database: "cpms",
   synchronize: true, 
   logging: [],
-  entities: [User, History, Park],
+  entities: [User, History, Park, Vehicle],
   migrations: ["query"],
   subscribers: [HistorySubscriber],
 });

@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
 import { Role } from "../enums/Role.ts";
-// import { Vehicle } from "./Vehicle.ts"; 
+import { Vehicle } from "./Vehicle.ts"; 
 // import { Booking } from "./Booking.ts"; 
 // import { Notification } from "./Notification.ts"; 
 
@@ -24,8 +24,8 @@ export class User {
   @Column({ type: "enum", enum: Role, default: Role.ATTENDANT })
   role: string;
 
-  // @OneToMany(() => Vehicle, vehicle => vehicle.user)
-  // vehicles: Vehicle[]; 
+  @OneToMany(() => Vehicle, vehicle => vehicle.user)
+  vehicles: Vehicle[]; 
 
   // @OneToMany(() => Booking, booking => booking.user) 
   // bookings: Booking[];

@@ -1,13 +1,37 @@
+/**
+ * @fileoverview Parking lot management controller for the CPMS application.
+ * This controller handles all parking lot-related operations including CRUD operations
+ * for managing parking facilities.
+ * 
+ * @requires express - Web framework types
+ * @requires ../services/ParkService - Parking lot business logic
+ */
+
 import { Request, Response } from 'express';
 import { ParkService } from '../services/ParkService.ts';
 
+/**
+ * ParkController class handles all parking lot-related HTTP requests
+ * @class
+ */
 export class ParkController {
   private readonly ParkService: ParkService;
 
+  /**
+   * Creates an instance of ParkController
+   * @constructor
+   */
   constructor() {
     this.ParkService = new ParkService();
   }
 
+  /**
+   * Get all parking lots
+   * @async
+   * @param {Request} req - Express request object
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   */
   async getAllParks(req: Request, res: Response): Promise<void> {
     try {
       const Parks = await this.ParkService.findAll();
@@ -18,6 +42,14 @@ export class ParkController {
     }
   }
 
+  /**
+   * Get parking lot by ID
+   * @async
+   * @param {Request} req - Express request object containing parking lot ID in params
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   * @throws {Error} If parking lot not found
+   */
   async getParkById(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);
@@ -33,6 +65,14 @@ export class ParkController {
     }
   }
 
+  /**
+   * Create a new parking lot
+   * @async
+   * @param {Request} req - Express request object containing parking lot data in body
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   * @throws {Error} If parking lot data is invalid
+   */
   async createPark(req: Request, res: Response): Promise<void> {
     try {
       const ParkData = req.body;
@@ -44,6 +84,14 @@ export class ParkController {
     }
   }
 
+  /**
+   * Update parking lot information
+   * @async
+   * @param {Request} req - Express request object containing parking lot ID in params and update data in body
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   * @throws {Error} If parking lot not found
+   */
   async updatePark(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);
@@ -60,6 +108,14 @@ export class ParkController {
     }
   }
 
+  /**
+   * Delete a parking lot
+   * @async
+   * @param {Request} req - Express request object containing parking lot ID in params
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   * @throws {Error} If parking lot not found
+   */
   async deletePark(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);

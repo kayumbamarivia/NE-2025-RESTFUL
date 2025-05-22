@@ -1,15 +1,41 @@
+/**
+ * @fileoverview User management controller for the CPMS application.
+ * This controller handles all user-related operations including authentication,
+ * registration, and user management.
+ * 
+ * @requires express - Web framework types
+ * @requires ../services/UserService - User business logic
+ * @requires ../utils/HistorySubscriber - History tracking
+ * @requires ../utils/jwt - JWT token generation
+ */
+
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService.ts";
 import { HistorySubscriber } from "../utils/HistorySubscriber.ts";
 import { generateToken } from "../utils/jwt.ts";
 
+/**
+ * UserController class handles all user-related HTTP requests
+ * @class
+ */
 export class UserController {
   private readonly userService: UserService;
 
+  /**
+   * Creates an instance of UserController
+   * @constructor
+   */
   constructor() {
     this.userService = new UserService();
   }
 
+  /**
+   * Get all users
+   * @async
+   * @param {Request} req - Express request object
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   */
   async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
       const users = await this.userService.findAll();
@@ -20,6 +46,13 @@ export class UserController {
     }
   }
 
+  /**
+   * Get user by ID
+   * @async
+   * @param {Request} req - Express request object containing user ID in params
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   */
   async getUserById(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);
@@ -37,6 +70,14 @@ export class UserController {
     }
   }
 
+  /**
+   * Create a new user
+   * @async
+   * @param {Request} req - Express request object containing user details in body
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   * @throws {Error} If required fields are missing or email is already in use
+   */
   async createUser(req: Request, res: Response): Promise<void> {
     try {
       const { firstName, lastName, email, password } = req.body;
@@ -69,6 +110,14 @@ export class UserController {
     }
   }
 
+  /**
+   * Update user information
+   * @async
+   * @param {Request} req - Express request object containing user ID in params and update data in body
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   * @throws {Error} If user not found or email is already in use
+   */
   async updateUser(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);
@@ -105,7 +154,14 @@ export class UserController {
     }
   }
 
-  // DELETE user
+  /**
+   * Delete a user
+   * @async
+   * @param {Request} req - Express request object containing user ID in params
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   * @throws {Error} If user not found
+   */
   async deleteUser(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);
@@ -124,7 +180,14 @@ export class UserController {
     }
   }
 
-  // POST login
+  /**
+   * Authenticate user and generate JWT token
+   * @async
+   * @param {Request} req - Express request object containing email and password in body
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   * @throws {Error} If credentials are invalid
+   */
   async login(req: Request, res: Response): Promise<void> {
     try {
       const { email, password } = req.body;
@@ -155,7 +218,14 @@ export class UserController {
     }
   }
 
-  // PATCH change user role
+  /**
+   * Change user role
+   * @async
+   * @param {Request} req - Express request object containing user ID in params and new role in body
+   * @param {Response} res - Express response object
+   * @returns {Promise<void>}
+   * @throws {Error} If user not found or role is invalid
+   */
   async changeUserRole(req: Request, res: Response): Promise<void> {
     try {
       const id = parseInt(req.params.id);

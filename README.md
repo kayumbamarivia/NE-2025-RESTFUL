@@ -1,99 +1,175 @@
-# js-node-react-next-nest-typescript-fortress
+# Car Parking Management System (CPMS)
 
-A full-stack monorepo fortress built with **Node.js**, **React**, **Next.js**, **NestJS**, and **TypeScript**. This project integrates a robust backend with Express and NestJS, a MongoDB database, and a dynamic frontend with React and Next.js, all unified with TypeScript for type safety and scalability.
+A modern, full-stack application for managing parking facilities efficiently. Built with TypeScript, Node.js, and React.
 
-## Table of Contents
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Scripts](#scripts)
-- [Contributing](#contributing)
-- [License](#license)
+## 🚀 Features
 
-## Features
-- **Monorepo Architecture**: Manage multiple packages (backend, frontend, shared utilities) in a single repository.
-- **Backend**: RESTful APIs with Express and NestJS, MongoDB integration, JWT authentication, and Swagger API documentation.
-- **Frontend**: React with Redux Toolkit for state management, React Router for navigation, and Next.js for server-side rendering (optional).
-- **Type Safety**: TypeScript across the stack for robust development.
-- **Developer Tools**: ESLint, Prettier, Stylelint, and Mocha for code quality and testing.
-- **Styling**: Tailwind CSS for rapid, utility-first styling.
+- **User Management**
+  - Role-based access control (Admin, Attendant)
+  - User authentication and authorization
+  - Profile management
+  - Secure password handling
 
-## Tech Stack
-- **Backend**: Node.js, Express, NestJS, MongoDB, Mongoose, JWT, Swagger
-- **Frontend**: React, Next.js, Redux Toolkit, React Router, Tailwind CSS
-- **Shared**: TypeScript, Vite (frontend build tool)
-- **Dev Tools**: ESLint, Prettier, Stylelint, Mocha, ts-node
+- **Vehicle Management**
+  - Vehicle registration and tracking
+  - Entry and exit management
+  - Parking duration tracking
+  - Automated fee calculation
 
-## Project Structure
+- **Parking Facility Management**
+  - Multiple parking lot support
+  - Real-time space availability
+  - Parking lot status monitoring
+  - Facility maintenance tracking
+
+- **Reporting & Analytics**
+  - Vehicle entry/exit reports
+  - Revenue tracking
+  - Usage statistics
+  - Custom date range reports
+
+- **Email Notifications**
+  - Automated notifications for users
+  - Parking status updates
+  - Payment confirmations
+
+## 🛠️ Technology Stack
+
+### Backend
+- **Runtime**: Node.js
+- **Language**: TypeScript
+- **Framework**: Express.js
+- **ORM**: TypeORM
+- **Database**: MySQL
+- **Authentication**: JWT
+- **Email**: Nodemailer
+
+### Frontend
+- **Framework**: React
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **State Management**: React Context
+- **Build Tool**: Vite
+
+## 📁 Project Structure
+
 ```
-js-node-react-next-nest-typescript-fortress/
-├── node-demo/          # Node.js/Express server example
-├── react/              # React frontend
-├── typescript-demo/    # TypeScript demo scripts
-├── tests/              # Mocha test files
-├── styles/             # CSS styles (Tailwind output)
-├── package.json        # Monorepo root configuration
-└── README.md           # This file
+cpms/
+├── cpms-back/           # Backend application
+│   ├── src/
+│   │   ├── controllers/ # Request handlers
+│   │   ├── models/      # Database models
+│   │   ├── services/    # Business logic
+│   │   ├── routes/      # API routes
+│   │   └── utils/       # Helper functions
+│   └── tests/           # Backend tests
+│
+├── cpms-front/          # Frontend application
+│   ├── src/
+│   │   ├── components/  # React components
+│   │   ├── pages/       # Page components
+│   │   ├── hooks/       # Custom hooks
+│   │   └── utils/       # Helper functions
+│   └── tests/           # Frontend tests
+│
+├── Database-dump/       # Database backups
+├── Architecture/        # System architecture docs
+├── ERD-diagram/         # Database schema
+└── UI-Design/          # UI/UX design assets
 ```
 
-*Note*: The monorepo may include additional packages (e.g., NestJS backend, shared utilities) as development progresses.
+## 🚀 Getting Started
 
-## Prerequisites
-- **Node.js**: v18 or higher
-- **npm**: v9 or higher
-- **MongoDB**: Local or cloud instance (e.g., MongoDB Atlas)
-- **Git**: For version control
+### Prerequisites
+- Node.js (v14 or higher)
+- MySQL (v8.0 or higher)
+- npm or yarn
 
-## Installation
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-username/js-node-react-next-nest-typescript-fortress.git
-   cd js-node-react-next-nest-typescript-fortress
-   ```
+### Installation
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/cpms.git
+cd cpms
+```
 
-3. **Set up environment variables**:
-   Create a `.env` file in the root directory based on `.env.example` (if provided). Example:
-   ```env
-   PORT=3000
-   MONGODB_URI=mongodb://localhost:27017/fortress
-   JWT_SECRET=your_jwt_secret
-   ```
+2. Install dependencies:
+```bash
+# Install dependencies
+npm install
 
-4. **Run the project**:
-   - For Node.js server: `npm run dev:node`
-   - For React frontend: `npm run dev:react`
-   - For TypeScript demo: `npm run dev:ts`
+3. Set up environment variables:
+```bash
+# In cpms-back directory
+cp .env.example .env
+# Edit .env with your configuration
+```
 
-## Scripts
-| Command                | Description                                      |
-|------------------------|--------------------------------------------------|
-| `npm run dev:ts`       | Runs TypeScript demo (`typescript-demo/hello.ts`) |
-| `npm run dev:node`     | Runs Node.js server with nodemon (`node-demo/server.js`) |
-| `npm run dev:react`    | Starts React dev server with Vite                |
-| `npm run build`        | Compiles TypeScript files                        |
-| `npm run watch`        | Compiles TypeScript in watch mode                |
-| `npm run lint`         | Lints `.ts`, `.tsx`, `.js`, `.jsx` files with ESLint |
-| `npm run format`       | Formats code with Prettier                       |
-| `npm run format:check` | Checks code formatting with Prettier             |
-| `npm run lint:css`     | Lints CSS files with Stylelint                   |
-| `npm run test`         | Runs Mocha tests (`tests/**/*.test.ts`)          |
+4. Initialize the database:
+```bash
+# Import the database schema
+mysql -u your_username -p your_database < Database-dump/init.sql
+```
 
-## Contributing
-We welcome contributions! Please follow these steps:
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/your-feature`).
-3. Commit changes (`git commit -m "Add your feature"`).
-4. Push to the branch (`git push origin feature/your-feature`).
-5. Open a Pull Request.
+5. Start the development servers:
+```bash
+# Start backend server
+npm run dev:pms
 
-Please ensure your code adheres to ESLint and Prettier rules. Run `npm run lint` and `npm run format` before committing.
+# Start frontend server
+npm run dev:react
+```
 
-## License
-This project is licensed under the [MIT License](LICENSE).
+## 📚 API Documentation
+
+The API documentation is available at `/api-docs` when running the backend server.
+
+### Key Endpoints
+
+- **Authentication**
+  - POST `/api/auth/login` - User login
+  - POST `/api/auth/register` - User registration
+
+- **Users**
+  - GET `/api/users` - Get all users
+  - GET `/api/users/:id` - Get user by ID
+  - PUT `/api/users/:id` - Update user
+  - DELETE `/api/users/:id` - Delete user
+
+- **Vehicles**
+  - GET `/api/vehicles` - Get all vehicles
+  - POST `/api/vehicles` - Register new vehicle
+  - PUT `/api/vehicles/:id` - Update vehicle
+  - POST `/api/vehicles/:id/entry` - Record vehicle entry
+  - POST `/api/vehicles/:id/exit` - Record vehicle exit
+
+- **Parks**
+  - GET `/api/parks` - Get all parking facilities
+  - POST `/api/parks` - Create new parking facility
+  - PUT `/api/parks/:id` - Update parking facility
+  - DELETE `/api/parks/:id` - Delete parking facility
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Authors
+
+- Your Name - Initial work
+
+## 🙏 Acknowledgments
+
+- Thanks to all contributors who have helped shape this project
+- Special thanks to the open-source community for the amazing tools and libraries
+
+## 📞 Support
+
+For support, email your-email@example.com or create an issue in the repository.
